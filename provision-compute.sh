@@ -27,7 +27,7 @@ public_key=$(cat ~/.ssh/id_rsa.pub)
 instance_metadata='{"ssh_authorized_keys": "'$public_key'"}'
 echo -e "\e[1;32m instance_metadata : $instance_metadata \e[0m"
 
-instance_ocid=$(oci compute instance launch --availability-domain "$instance_ad" --compartment-id "$compartment_id" --shape "$instance_shape" --subnet-id "$vcn_public_subnet_id" --assign-public-ip true --display-name "$instance_name" --image-id "$instance_image_ocid" --metadata "$instance_metadata" --wait-for-state RUNNING --query 'data.id' --raw-output)
+instance_ocid=$(oci compute instance launch --availability-domain "$instance_ad" --compartment-id "$compartment_id" --shape "$instance_shape" --subnet-id "$vcn_public_subnet_id" --assign-public-ip true --display-name "$instance_name" --image-id "$instance_image_ocid" --metadata "$instance_metadata" --wait-for-state RUNNING --query 'data.id' --raw-output --user-data-file  "$SCRIPTPATH"/cloud-init/"$instance_cloud_init_file_name" )
 echo -e "\e[1;32m instance_ocid : $instance_ocid \e[0m"
 
 instance_public_ip=$(oci compute instance list-vnics --compartment-id "$compartment_id" --instance-id "$instance_ocid" --query 'data[0]."public-ip"' --raw-output)
