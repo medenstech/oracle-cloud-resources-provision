@@ -9,7 +9,8 @@ task "provisioning ALL resources"
 
 sh $SCRIPTPATH/provision-compartment.sh
 sh $SCRIPTPATH/provision-network.sh
-sh $SCRIPTPATH/provision-ob.sh
+sh $SCRIPTPATH/provision-object-storage-bucket.sh
+sh $SCRIPTPATH/provision-custom-resources.sh
 sh $SCRIPTPATH/provision-customer-agreement.sh
 sh $SCRIPTPATH/provision-compute.sh
 
