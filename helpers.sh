@@ -18,7 +18,7 @@ save_to_temp () {
 	}
 
 save_param () {
-	save_to_temp "$1" "$2" ""
+	save_to_temp "$1" "$2" ".param"
         log "$1 : $2"
 	}
 
@@ -32,3 +32,8 @@ load_ocid () {
 	. $SCRIPTPATH/"$temp_folder"/"$1.ocid"
 	log "$1 : ${!1}"
 	}
+
+load_param () {
+        . $SCRIPTPATH/"$temp_folder"/"$1.param"
+        log "$1 : ${!1}"
+        }
