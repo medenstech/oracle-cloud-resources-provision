@@ -1,18 +1,33 @@
 #!/bin/bash
+
 SCRIPTPATH="$( cd "$(dirname "$0")" >/dev/null 2>&1 ; pwd -P )"
-echo -e "\e[1;32m => provisioning ALL resources \e[0m"
+. $SCRIPTPATH/helpers.sh
+
+
+task "provisioning ALL resources"
+
+
 sh $SCRIPTPATH/provision-compartment.sh
 sh $SCRIPTPATH/provision-network.sh
-sh $SCRIPTPATH/provision-resources.sh
+sh $SCRIPTPATH/provision-ob.sh
 sh $SCRIPTPATH/provision-customer-agreement.sh
 sh $SCRIPTPATH/provision-compute.sh
 
 
-echo -e "\e[1;32m <= DONE \e[0m"
-dt=$(cat $SCRIPTPATH/instance_public_ip)
-echo -e "\e[1;32m SSH to : $dt \e[0m"
-dt=$(cat $SCRIPTPATH/object_storage_preauth_link)
-echo -e "\e[1;32m SSH key : $dt \e[0m"
+log "<= DONE"
 
+load_param "instance_public_ip"
+load_param "object_storage_preauth_link"
+
+log " ============== INSTRUCTIONS ============== "
+echo ""
+echo "1. Download key from $object_storage_preauth_link"
+echo "2. Connect to $instance_public_ip with user \"opc\" (ssh opc@$instance_public_ip -i \"path to key\""
+echo "3. Run:"
+echo "	jupyter notebook --generate-config"
+echo "	sed -i "s/#c.NotebookApp.ip = 'localhost'/c.NotebookApp.ip = '*'/" ~/.jupyter/jupyter_notebook_config.py"
+echo "	jupyter notebook password"
+echo "	pyspark"
+echo "4. Connect to http://$instance_public_ip:8888"
 
 

@@ -1,36 +1,37 @@
 #!/bin/bash
 
 SCRIPTPATH="$( cd "$(dirname "$0")" >/dev/null 2>&1 ; pwd -P )"
-. $SCRIPTPATH/setup.config
-. $SCRIPTPATH/instance_image_ocid
-
-echo -e "\e[1;32m running in $SCRIPTPATH \e[0m"
-echo -e "\e[1;32m => provision \"$instance_name\" compute instance \e[0m"
-echo -e "\e[1;32m instance_image_ocid : $instance_image_ocid \e[0m"
-
-compartment_id=$(oci iam compartment list --all --compartment-id-in-subtree true --access-level ACCESSIBLE --include-root --raw-output --query "data[?\"lifecycle-state\" == 'ACTIVE'] | [?contains(\"name\",'$compartment_name')].id | [0]")
-echo -e "\e[1;32m compartment_id : $compartment_id \e[0m"
+. $SCRIPTPATH/helpers.sh
 
 
-vcn_id=$(oci network vcn list --compartment-id $compartment_id --raw-output --query "data[?contains(\"display-name\",'$vcn_name')].id | [0]")
-echo -e "\e[1;32m vcn_id : $vcn_id \e[0m"
+task "provision \"$instance_name\" compute instance"
 
-vcn_public_subnet_id=$(oci network subnet list --compartment-id $compartment_id --vcn-id $vcn_id --raw-output --query "data[?contains(\"display-name\",'$vcn_public_subnet_name')].id | [0]")
-echo -e "\e[1;32m vcn_public_subnet_id : $vcn_public_subnet_id \e[0m"
 
+#get compartment
+load_ocid "compartment_id"
+
+#get image-id
+load_ocid "instance_image_ocid"
+
+#get vcnid
+load_ocid "vcn_id"
+
+#get subnet
+load_ocid "vcn_public_subnet_id"
+
+
+#instance AD
 
 instance_ad=$(oci iam availability-domain list --all --query 'data[?contains(name, `'"${availability_domain}"'`)] | [0].name' --raw-output)
-echo -e "\e[1;32m instance_ad : $instance_ad \e[0m"
+save_param "instance_ad" "$instance_ad"
 
 
-public_key=$(cat ~/.ssh/id_rsa.pub)
+load_param "public_key"
 instance_metadata='{"ssh_authorized_keys": "'$public_key'"}'
-echo -e "\e[1;32m instance_metadata : $instance_metadata \e[0m"
+log "instance_metadata : $instance_metadata"
 
 instance_ocid=$(oci compute instance launch --availability-domain "$instance_ad" --compartment-id "$compartment_id" --shape "$instance_shape" --subnet-id "$vcn_public_subnet_id" --assign-public-ip true --display-name "$instance_name" --image-id "$instance_image_ocid" --metadata "$instance_metadata" --wait-for-state RUNNING --query 'data.id' --raw-output --user-data-file  "$SCRIPTPATH"/cloud-init/"$instance_cloud_init_file_name" )
-echo -e "\e[1;32m instance_ocid : $instance_ocid \e[0m"
+save_ocid "instance_ocid" $instance_ocid
 
 instance_public_ip=$(oci compute instance list-vnics --compartment-id "$compartment_id" --instance-id "$instance_ocid" --query 'data[0]."public-ip"' --raw-output)
-echo -e "\e[1;32m instance_public_ip : $instance_public_ip \e[0m"
-
-echo  $instance_public_ip > $SCRIPTPATH/instance_public_ip
+save_param "instance_public_ip" "$instance_public_ip"
