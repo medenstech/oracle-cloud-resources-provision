@@ -12,13 +12,19 @@ task () {
 	log "=> $1"
 	}
 	
-save_param () {
+save_to_temp () {
 	mkdir -p $SCRIPTPATH/"$temp_folder"
-	echo "$1=$2" >$SCRIPTPATH/"$temp_folder"/"$1.$3"
-}
+	echo "$1=$2" >$SCRIPTPATH/"$temp_folder"/"$1$3"
+	}
+
+save_param () {
+	save_to_temp "$1" "$2" ""
+        log "$1 : $2"
+	}
+
 
 save_ocid () {
-	save_param $1 $2 "ocid"
+	save_to_temp "$1" "$2" ".ocid"
 	log "$1 : $2"
 	}
 
