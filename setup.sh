@@ -27,7 +27,7 @@ log "2. Wait about 20 minutes till the instance finish the boot process and soft
 log "3. Connect to $instance_public_ip with user \"opc\" (ssh opc@$instance_public_ip -i \"path to key\""
 log "4. Run:"
 log "   jupyter notebook --generate-config"
-log "   sed -i "s/#c.NotebookApp.ip = 'localhost'/c.NotebookApp.ip = '*'/" ~/.jupyter/jupyter_notebook_config.py"
+log "	sed -i \"s/#c.NotebookApp.ip = 'localhost'/c.NotebookApp.ip = '*'/\" ~/.jupyter/jupyter_notebook_config.py"
 log "   jupyter notebook password"
 log "   pyspark"
 log "5. Connect to http://$instance_public_ip:8888"
