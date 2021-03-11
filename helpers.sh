@@ -2,7 +2,7 @@
 
 SCRIPTPATH="$( cd "$(dirname "$0")" >/dev/null 2>&1 ; pwd -P )"
 . $SCRIPTPATH/setup.config
-echo "running in $SCRIPTPATH"
+#echo "running in $SCRIPTPATH"
 
 log () {
 	echo -e "\e[1;32m$1\e[0m"
