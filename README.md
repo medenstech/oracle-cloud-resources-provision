@@ -1,2 +1,2 @@
 # oracle-cloud-resources-provision
-OCI CLI scripts provisioning basic resources in OCI account
+CI CLI scripts provisioning resources in OCI account for spark single instance
