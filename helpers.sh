@@ -5,7 +5,8 @@ SCRIPTPATH="$( cd "$(dirname "$0")" >/dev/null 2>&1 ; pwd -P )"
 #echo "running in $SCRIPTPATH"
 
 log () {
-	echo -e "\e[1;32m$1\e[0m"
+	t_date=$(date '+%Y-%m-%d %H:%M:%S')
+	echo -e "\e[1;32m[$t_date] $1\e[0m"
 	}
 
 task () {
