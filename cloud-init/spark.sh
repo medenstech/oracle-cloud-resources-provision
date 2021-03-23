@@ -13,7 +13,7 @@ sudo rm /opt/spark-3.0.2-bin-hadoop2.7.tgz
 
 sudo echo "export SPARK_HOME=/opt/spark" >> /home/$local_user/.bashrc
 sudo echo "export PATH=\$SPARK_HOME/bin:\$PATH" >> /home/$local_user/.bashrc
-
+sudo echo "export PYSPARK_PYTHON=/usr/bin/python3" >> /home/$local_user/.bashrc
 
 #python
 sudo yum install -y oracle-epel-release-el7 oracle-release-el7
